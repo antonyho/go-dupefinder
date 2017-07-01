@@ -39,7 +39,7 @@ func (c Cache) Close() {
 
 func (c Cache) ListDuplicated() ([]file.Group, error) {
 	var groups []file.Group
-	results, err := c.db.Table("files").Select("hash, count(1) as total").Group("hash").Having("count(1) > ?", 1).Rows()
+	results, err := c.db.Table("files").Order("size desc").Select("hash, count(1) as total").Group("hash").Having("count(1) > ?", 1).Rows()
 	if err != nil {
 		return nil, err
 	}
