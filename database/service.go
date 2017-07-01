@@ -10,7 +10,7 @@ type Cache struct {
 }
 
 func New() *Cache {
-	db, err := gorm.Open("sqlite3", "cache.db")
+	db, err := gorm.Open("sqlite3", ":memory:")
 	if err != nil {
 		panic("Cannot create cache database")
 	}
@@ -29,4 +29,9 @@ func (c Cache) Initialise() {
 
 func (c Cache) Add(f File) {
 	c.db.Create(&f)
+}
+
+func (c Cache) Close() {
+	c.db.Close()
+	// TODO Delete the db file if it is not on memory
 }
