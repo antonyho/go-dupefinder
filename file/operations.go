@@ -1,16 +1,16 @@
 package file
 
 import (
+	"crypto/sha1"
+	"fmt"
+	"github.com/antonyho/go-dupefinder/database"
+	hash2 "hash"
+	"io"
+	"log"
 	"os"
 	"path/filepath"
-	"log"
-	"github.com/antonyho/go-dupefinder/database"
 	"syscall"
 	"time"
-	hash2 "hash"
-	"crypto/sha1"
-	"io"
-	"fmt"
 )
 
 func Cache(cache *database.Cache) filepath.WalkFunc {
@@ -23,7 +23,7 @@ func Cache(cache *database.Cache) filepath.WalkFunc {
 		if !info.IsDir() && (info.Size() > 0) {
 			var (
 				checksum string
-				hash hash2.Hash
+				hash     hash2.Hash
 			)
 			if fp, err := os.Open(path); err != nil {
 				log.Panicf("Unable to open %s.\n", path)
@@ -38,10 +38,10 @@ func Cache(cache *database.Cache) filepath.WalkFunc {
 				checksum = fmt.Sprint("%x", hash.Sum(nil))
 			}
 			f := database.File{
-				Path: path,
-				Hash: checksum,
-				Size: info.Size(),
-				CreationTime: time.Unix(int64(fileStat.Ctimespec.Sec), int64(fileStat.Ctimespec.Nsec)),
+				Path:             path,
+				Hash:             checksum,
+				Size:             info.Size(),
+				CreationTime:     time.Unix(int64(fileStat.Ctimespec.Sec), int64(fileStat.Ctimespec.Nsec)),
 				ModificationTime: info.ModTime(),
 			}
 			cache.Add(f)
