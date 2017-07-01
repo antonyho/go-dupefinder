@@ -7,7 +7,7 @@ type Group struct {
 	Checksum string
 }
 
-type Files []*database.File
+type Files []database.File
 
 func (s Files) Len() int {
 	return len(s)
