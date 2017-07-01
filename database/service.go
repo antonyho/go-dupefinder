@@ -14,7 +14,7 @@ func New() *Cache {
 	if err != nil {
 		panic("Cannot create cache database")
 	}
-	cache := &Cache {
+	cache := &Cache{
 		db: db,
 	}
 	cache.Initialise()
