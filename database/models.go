@@ -7,12 +7,12 @@ import (
 
 type File struct {
 	gorm.Model
-	Path             string
-	Hash             string `gorm:"index"`
-	Size             int64  `gorm:"index"`
-	Type             string
-	CreationTime     time.Time
-	ModificationTime time.Time
+	Path             string              `csv:"file path"`
+	Hash             string `gorm:"index" csv:"checksum"`
+	Size             int64  `gorm:"index" csv:"size"`
+	Type             string              `csv:"-"`
+	CreationTime     time.Time           `csv:"creation time"`
+	ModificationTime time.Time           `csv:"modification time"`
 }
 
 type ChecksumResult struct {
