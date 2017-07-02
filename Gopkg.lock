@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/gocarina/gocsv"
+  packages = ["."]
+  revision = "911e4d95f88fba73eee965e7031bd52081607161"
+
+[[projects]]
   name = "github.com/jinzhu/gorm"
   packages = [".","dialects/sqlite"]
   revision = "5174cc5c242a728b435ea2be8a2f7f998e15429b"
@@ -23,11 +29,17 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "d997483c6db05184c79c182674d01f1e7b7553ae"
+  revision = "1f9224279e98554b6a6432d4dd998a739f8b2b7c"
+
+[[projects]]
+  name = "gopkg.in/urfave/cli.v1"
+  packages = ["."]
+  revision = "0bdeddeeb0f650497d603c4ad7b20cfe685682f6"
+  version = "v1.19.1"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "983b42a768fbefe59019e8df9981b7fb3b134aed5748c41fa9a096e944f3cd57"
+  inputs-digest = "c182e4f6b41c095ac798742a586c8cfb2549ba51efd956bd32c1152587a71c8d"
   solver-name = "gps-cdcl"
   solver-version = 1
