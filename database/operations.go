@@ -1,9 +1,9 @@
-package file
+package database
 
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/antonyho/go-dupefinder/database"
+	"github.com/antonyho/go-dupefinder/file"
 	hash2 "hash"
 	"io"
 	"log"
@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-func Cache(cache *database.Cache) filepath.WalkFunc {
+func Store(cache *Cache) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			log.Panicf("Problem analysing file. Error: %v", err)
@@ -37,7 +37,7 @@ func Cache(cache *database.Cache) filepath.WalkFunc {
 				}
 				checksum = fmt.Sprint("%x", hash.Sum(nil))
 			}
-			f := database.File{
+			f := file.Info{
 				Path:             path,
 				Hash:             checksum,
 				Size:             info.Size(),

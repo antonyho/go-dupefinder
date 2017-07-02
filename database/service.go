@@ -25,10 +25,10 @@ func New() *Cache {
 
 func (c Cache) Initialise() {
 	// Create table or update table
-	c.db.AutoMigrate(&File{})
+	c.db.AutoMigrate(&file.Info{})
 }
 
-func (c Cache) Add(f File) {
+func (c Cache) Add(f file.Info) {
 	c.db.Create(&f)
 }
 
@@ -45,13 +45,13 @@ func (c Cache) ListDuplicated() ([]file.Group, error) {
 	}
 	for results.Next() {
 		var (
-			checksumResult ChecksumResult
+			checksumResult file.ChecksumResult
 			group          file.Group
 		)
 		if err = results.Scan(&checksumResult); err != nil {
 			return nil, err
 		}
-		c.db.Where(&File{Hash: checksumResult.Hash}).Find(&(group.Files))
+		c.db.Where(&file.Info{Hash: checksumResult.Hash}).Find(&(group.Files))
 		group.Checksum = group.Files[0].Hash
 		groups = append(groups, group)
 	}

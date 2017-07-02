@@ -1,13 +1,31 @@
 package file
 
-import "github.com/antonyho/go-dupefinder/database"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
+
+type Info struct {
+	gorm.Model
+	Path             string    `csv:"file path"`
+	Hash             string    `gorm:"index" csv:"checksum"`
+	Size             int64     `gorm:"index" csv:"size"`
+	Type             string    `csv:"-"`
+	CreationTime     time.Time `csv:"creation time"`
+	ModificationTime time.Time `csv:"modification time"`
+}
+
+type ChecksumResult struct {
+	Hash  string
+	Total int64
+}
 
 type Group struct {
-	Files    []database.File
+	Files    []Info
 	Checksum string
 }
 
-type Files []database.File
+type Files []Info
 
 func (s Files) Len() int {
 	return len(s)
