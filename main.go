@@ -18,14 +18,14 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Dupefinder"
 	app.Usage = "Find duplicated files for you and report in CSV file"
-	app.Flags = []cli.Flag(
+	app.Flags = []cli.Flag{
 		cli.StringFlag{
 			Name:        "dir, d",
 			Value:       "/",
 			Usage:       "Base `DIRECTORY` to start the scanning",
 			Destination: &path,
 		},
-	)
+	}
 	app.Action = func(c *cli.Context) error {
 		// Build cache database
 		cache := database.New()
