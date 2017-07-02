@@ -16,6 +16,8 @@ import (
 func main() {
 	var path string
 	app := cli.NewApp()
+	app.Name = "Dupefinder"
+	app.Usage = "Find duplicated files for you and report in CSV file"
 	app.Flags = []cli.Flag(
 		cli.StringFlag{
 			Name:        "dir, d",
