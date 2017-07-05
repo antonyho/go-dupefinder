@@ -29,7 +29,7 @@
   branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
-  revision = "1f9224279e98554b6a6432d4dd998a739f8b2b7c"
+  revision = "570fa1c91359c1869590e9cedf3b53162a51a167"
 
 [[projects]]
   name = "gopkg.in/urfave/cli.v1"
