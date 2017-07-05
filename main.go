@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/antonyho/go-dupefinder/database"
 	"github.com/antonyho/go-dupefinder/file"
 	"github.com/gocarina/gocsv"
@@ -10,9 +11,8 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
-	"unicode/utf8"
-	"fmt"
 	"time"
+	"unicode/utf8"
 )
 
 func main() {
@@ -88,6 +88,7 @@ func main() {
 var (
 	spinner = []string{"-", "\\", "|", "/"}
 )
+
 func spinMsg(msg string) *time.Ticker {
 	n := 0
 	rotateTicker := time.NewTicker(time.Second)
