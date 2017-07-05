@@ -16,7 +16,7 @@ import (
 func Store(cache *Cache) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
 		if err != nil {
-			log.Panicf("Problem analysing file. Error: %v", err)
+			log.Printf("\nProblem analysing file %s\nError: %v\n", path, err)
 			return nil
 		}
 		fileStat := info.Sys().(*syscall.Stat_t)
@@ -26,14 +26,14 @@ func Store(cache *Cache) filepath.WalkFunc {
 				hash     hash2.Hash
 			)
 			if fp, err := os.Open(path); err != nil {
-				log.Panicf("Unable to open %s.\n", path)
-				return err
+				log.Printf("\nUnable to open %s\n", path)
+				return nil
 			} else {
 				defer fp.Close()
 				hash = sha1.New()
 				if _, err := io.Copy(hash, fp); err != nil {
-					log.Panicf("Error hashing file checksum %s.\n", path)
-					return err
+					log.Printf("\nError hashing file checksum %s\n", path)
+					return nil
 				}
 				checksum = fmt.Sprint("%x", hash.Sum(nil))
 			}
