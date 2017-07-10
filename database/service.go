@@ -56,8 +56,8 @@ func (c Cache) ListDuplicated() ([]file.Group, error) {
 	for results.Next() {
 		var (
 			checksum string
-			total int
-			group file.Group
+			total    int
+			group    file.Group
 		)
 		group.Files = make([]file.Info, 0)
 		if err = results.Scan(&checksum, &total); err != nil {
