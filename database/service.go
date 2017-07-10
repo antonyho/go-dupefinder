@@ -4,7 +4,6 @@ import (
 	"github.com/antonyho/go-dupefinder/file"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
-	"log"
 )
 
 type Cache struct {
@@ -27,8 +26,8 @@ func New() *Cache {
 }
 
 func (c Cache) Initialise() error {
-	// Create table or update table
-	if err := c.db.AutoMigrate(&file.Info{}).Error; err != nil {
+	// Create table table
+	if err := c.db.CreateTable(&file.Info{}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -53,21 +52,25 @@ func (c Cache) ListDuplicated() ([]file.Group, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer results.Close()
+	type group struct {
+		hash  string
+		total int
+	}
+	grps := []group{}
 	for results.Next() {
-		var (
-			checksum string
-			total    int
-			group    file.Group
-		)
-		group.Files = make([]file.Info, 0)
-		if err = results.Scan(&checksum, &total); err != nil {
+		var r group
+		if err = results.Scan(&r); err != nil {
 			return nil, err
 		}
-		var cnt int
-		c.db.Find(&group.Files, file.Info{Hash: checksum}).Count(&cnt)
-		log.Printf("Count: %v", cnt)
-		group.Checksum = group.Files[0].Hash
-		groups = append(groups, group)
+		grps = append(grps, r)
+	}
+	for _, grp := range grps {
+		var fileGrp file.Group
+		fileGrp.Files = make([]file.Info, 0)
+		c.db.Find(&fileGrp.Files, file.Info{Hash: grp.hash})
+		fileGrp.Checksum = fileGrp.Files[0].Hash
+		groups = append(groups, fileGrp)
 	}
 
 	return groups, nil
