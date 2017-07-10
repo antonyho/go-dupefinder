@@ -4,6 +4,7 @@ import (
 	"github.com/antonyho/go-dupefinder/file"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	"log"
 )
 
 type Cache struct {
@@ -18,18 +19,26 @@ func New() *Cache {
 	cache := &Cache{
 		db: db,
 	}
-	cache.Initialise()
+	if err = cache.Initialise(); err != nil {
+		panic("Cannot create table")
+	}
 
 	return cache
 }
 
-func (c Cache) Initialise() {
+func (c Cache) Initialise() error {
 	// Create table or update table
-	c.db.AutoMigrate(&file.Info{})
+	if err := c.db.AutoMigrate(&file.Info{}).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
-func (c Cache) Add(f file.Info) {
-	c.db.Create(&f)
+func (c Cache) Add(f file.Info) error {
+	if err := c.db.Create(&f).Error; err != nil {
+		return err
+	}
+	return nil
 }
 
 func (c Cache) Close() {
@@ -38,20 +47,25 @@ func (c Cache) Close() {
 }
 
 func (c Cache) ListDuplicated() ([]file.Group, error) {
+	tableName := (file.Info{}).TableName()
 	var groups []file.Group
-	results, err := c.db.Table("files").Order("size desc").Select("hash, count(1) as total").Group("hash").Having("count(1) > ?", 1).Rows()
+	results, err := c.db.Table(tableName).Order("size desc").Select("hash, count(1) as total").Group("hash").Having("count(1) > ?", 1).Rows()
 	if err != nil {
 		return nil, err
 	}
 	for results.Next() {
 		var (
-			checksumResult file.ChecksumResult
-			group          file.Group
+			checksum string
+			total int
+			group file.Group
 		)
-		if err = results.Scan(&checksumResult); err != nil {
+		group.Files = make([]file.Info, 0)
+		if err = results.Scan(&checksum, &total); err != nil {
 			return nil, err
 		}
-		c.db.Where(&file.Info{Hash: checksumResult.Hash}).Find(&(group.Files))
+		var cnt int
+		c.db.Find(&group.Files, file.Info{Hash: checksum}).Count(&cnt)
+		log.Printf("Count: %v", cnt)
 		group.Checksum = group.Files[0].Hash
 		groups = append(groups, group)
 	}

@@ -44,7 +44,10 @@ func Store(cache *Cache) filepath.WalkFunc {
 				CreationTime:     time.Unix(int64(fileStat.Ctimespec.Sec), int64(fileStat.Ctimespec.Nsec)),
 				ModificationTime: info.ModTime(),
 			}
-			cache.Add(f)
+			if err = cache.Add(f); err != nil {
+				log.Printf("\nUnable to add record\n")
+				return err
+			}
 		}
 
 		return nil
