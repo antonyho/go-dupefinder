@@ -94,7 +94,7 @@ func spinMsg(msg string) *time.Ticker {
 	rotateTicker := time.NewTicker(time.Second)
 	go func() {
 		for _ = range rotateTicker.C {
-			fmt.Printf("\r%-2s%-75s", spinner[n%4], msg)
+			fmt.Printf("\r%-2s%-78s", spinner[n%4], msg)
 			n++
 		}
 	}()
