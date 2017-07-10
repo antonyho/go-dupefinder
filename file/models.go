@@ -14,6 +14,9 @@ type Info struct {
 	CreationTime     time.Time `csv:"creation time"`
 	ModificationTime time.Time `csv:"modification time"`
 }
+func (Info) TableName() string {
+	return "fileinfo"
+}
 
 type ChecksumResult struct {
 	Hash  string
