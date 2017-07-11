@@ -60,7 +60,7 @@ func (c Cache) ListDuplicated() ([]file.Group, error) {
 	grps := []group{}
 	for results.Next() {
 		var r group
-		if err = results.Scan(&r); err != nil {
+		if err = results.Scan(&r.hash, &r.total); err != nil {
 			return nil, err
 		}
 		grps = append(grps, r)
